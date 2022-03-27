@@ -1,7 +1,7 @@
 import { GetServerSideProps } from "next";
 import { getSession } from "next-auth/react";
 import { getPrismicClient } from "../../services/prismicio";
-import {RichText} from 'prismic-reactjs';
+import {RichText, RichTextBlock} from 'prismic-reactjs';
 import Head from "next/head";
 
 import styles from './post.module.scss'
@@ -11,7 +11,7 @@ interface PostProps{
 
         slug: string;
         title: string;
-        content: string;
+        content: RichTextBlock[];
         updatedAt: string;
     }
 }
