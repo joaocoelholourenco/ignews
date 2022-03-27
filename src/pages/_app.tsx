@@ -18,10 +18,12 @@ function MyApp({ Component, pageProps: { session, ...pageProps }, }: AppProps) {
         </Link>
       )}
     >
-    <NextAuthProvider session={session} >
-      <Header />
-      <Component {...pageProps} />
-    </NextAuthProvider>
+      <PrismicPreview repositoryName="ignewsjvcl">
+        <NextAuthProvider session={session} >
+          <Header />
+          <Component {...pageProps} />
+        </NextAuthProvider>
+      </PrismicPreview>
     </PrismicProvider>
   )
 }
