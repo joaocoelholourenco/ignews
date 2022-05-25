@@ -20,7 +20,6 @@ interface PostPreviewProps {
 
 export default function postPreview({ post }: PostPreviewProps) {
   const { data: session } = useSession();
-  console.log(session);
   const router = useRouter();
 
   useEffect(() => {
@@ -68,8 +67,6 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   const prismic = getPrismicClient();
 
   const response = await prismic.getByUID("publication", String(slug));
-
-  console.log(response);
 
   const post = {
     slug,

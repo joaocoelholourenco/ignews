@@ -1,8 +1,8 @@
-import { query as q } from 'faunadb';
-import NextAuth from 'next-auth';
-import GitHubProvider from 'next-auth/providers/github';
+import { query as q } from "faunadb";
+import NextAuth from "next-auth";
+import GitHubProvider from "next-auth/providers/github";
 
-import { fauna } from '../../../services/fauna';
+import { fauna } from "../../../services/fauna";
 
 export default NextAuth({
   providers: [
@@ -13,82 +13,54 @@ export default NextAuth({
   ],
   secret: process.env.JWT_SECRET,
   callbacks: {
-    async session({session}){
+    async session({ session }) {
       try {
         const email = session.user.email;
         const userActiveSubscription = await fauna.query(
-        
           q.Get(
             q.Intersection([
               q.Match(
-                q.Index('subscription_by_user_ref'),
+                q.Index("subscription_by_user_ref"),
                 q.Select(
                   "ref",
-                  q.Get(
-                    q.Match(
-                      q.Index('user_by_email'),
-                      q.Casefold(email)
-                    )
-                  )
+                  q.Get(q.Match(q.Index("user_by_email"), q.Casefold(email)))
                 )
               ),
-              q.Match(
-                q.Index('subscription_by_status'),
-                'active'
-              )]
-            )
+              q.Match(q.Index("subscription_by_status"), "active"),
+            ])
           )
         );
-              
-        return {
-          ...session,
-          activeSubscription: userActiveSubscription
-        }
 
-      } catch(erro){
-        
-        console.log(erro)
-        
         return {
           ...session,
-          activeSubscription: null
-        }
+          activeSubscription: userActiveSubscription,
+        };
+      } catch (erro) {
+        return {
+          ...session,
+          activeSubscription: null,
+        };
       }
-      
     },
-    async signIn({user}) {
+    async signIn({ user }) {
       const { email } = user;
-      
-      try{
-        
+
+      try {
         await fauna.query(
           q.If(
             q.Not(
               q.Exists(
-                q.Match(
-                  q.Index('user_by_email'),
-                  q.Casefold(user.email)
-                )
+                q.Match(q.Index("user_by_email"), q.Casefold(user.email))
               )
             ),
-            q.Create(
-              q.Collection('users'),
-              { data: { email } }
-            ),
-            q.Get(
-              q.Match(
-                q.Index('user_by_email'),
-                q.Casefold(user.email)
-              )
-            )
+            q.Create(q.Collection("users"), { data: { email } }),
+            q.Get(q.Match(q.Index("user_by_email"), q.Casefold(user.email)))
           )
-        )
+        );
         return true;
       } catch {
         return false;
       }
-
-
-    }
-  }
-})
+    },
+  },
+});
