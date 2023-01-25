@@ -45,7 +45,7 @@ Necessário ter instalado o [Git](https://git-scm.com/) e [Yarn](https://classic
 
 ```bash
 # Execute o comando git clone para realizar o clone do repositório
-$ git clone https://github.com/nelsonsantosaraujo/ignews.git
+$ git clone https://github.com/joaovitorcl13/ignews.git
 # Entre na pasta do repositório clonado
 $ cd ignews
 ```
